@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ddx Ahmed AI - Premium Edition</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-sky: #00d4ff;
+            --deep-ocean: #0099cc;
+            --midnight-bg: #030a1c;
+            --card-dark: #071129;
+            --text-light: #e0f7fa;
+            --user-gradient: linear-gradient(135deg, #00d4ff, #0099cc);
+            --bot-gradient: linear-gradient(135deg, #101931, #0b1122);
+            --border-blue: #162a4d;
+            --shadow-glow: 0 0 25px rgba(0, 212, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--midnight-bg);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 153, 204, 0.05) 0%, transparent 40%);
+            color: var(--text-light);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            width: 95%;
+            max-width: 850px;
+            height: 85vh;
+            background-color: var(--card-dark);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6), var(--shadow-glow);
+            border: 1px solid var(--border-blue);
+            animation: fadeIn 1s ease-out;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .chat-header {
+            padding: 15px 25px;
+            background: rgba(7, 17, 41, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-blue);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, .3);
+            border-radius: 24px;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, var(--primary-sky));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: transparent;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            /* الخط أصبح أوضح فصغرنا الحجم قليلاً للتوازن */
+            font-weight: 400;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            animation: messageSlideIn 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--user-gradient);
+            color: #ffffff;
+            border-bottom-right-radius: 5px;
+            font-weight: 600;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: var(--bot-gradient);
+            color: var(--text-light);
+            border-bottom-left-radius: 5px;
+            border: 1px solid var(--border-blue);
+        }
+
+        .chat-input-area {
+            padding: 20px 25px;
+            background: rgba(7, 17, 41, 0.9);
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid var(--border-blue);
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 15px;
+            border: 1px solid var(--border-blue);
+            background-color: #030814;
+            color: #ffffff;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #user-input:focus {
+            border-color: var(--primary-sky);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
+        }
+
+        #send-btn {
+            padding: 0 25px;
+            background: var(--user-gradient);
+            color: #ffffff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        #send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .typing-indicator {
+            display: none;
+            margin-right: 30px;
+            color: var(--primary-sky);
+            font-size: 0.85rem;
+            font-weight: 600;
+            animation: pulseGlow 1.8s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.4;
+            }
+        }
+
+
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Ddx Ahmed AI <span style="font-size: 0.8rem; font-weight: 400; color:var(--primary-sky);">V1</span></h2>
+        </div>
+        <div id="chat-messages">
+            <div class="message bot-message">أهلاً بك! أنا Ddx Ahmed AI. تم تحديث الخط والواجهة لأفضل تجربة ممكنة.
+                اسألني عن أي شيء!</div>
+        </div>
+        <div id="typing" class="typing-indicator">جاري معالجة طلبك...</div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="اكتب سؤالك هنا..." autocomplete="off" />
+            <button id="send-btn">إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const typingIndicator = document.getElementById('typing');
+
+        async function typeWriterEffect(element, text) {
+            let i = 0;
+            element.textContent = "";
+            return new Promise((resolve) => {
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        setTimeout(type, 10);
+                    } else {
+                        resolve();
+                    }
+                }
+                type();
+            });
+        }
+
+        async function addMessage(text, isUser) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message');
+            msgDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+
+            if (isUser) {
+                msgDiv.textContent = text;
+                chatMessages.appendChild(msgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else {
+                chatMessages.appendChild(msgDiv);
+                await typeWriterEffect(msgDiv, text);
+            }
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // 1. عرض رسالة المستخدم
+            await addMessage(text, true);
+            userInput.value = "";
+
+            // 2. إظهار مؤشر التفكير
+            typingIndicator.style.display = "block";
+
+            const API_KEY = "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";
+
+            try {
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        // التعديل هنا: إضافة الـ System Prompt عشان يعرف هو مين
+                        messages: [
+                            {
+                                role: "system",
+                                content: "اسمك هو Ddx Ahmed AI. أنت مساعد ذكي ومحترف تم تطويرك بواسطة المبرمج Ddx Ahmed. عندما يسألك أي شخص 'أنت مين؟' أو 'ما اسمك؟' أو 'من صنعك؟'، أجب دائماً بأنك Ddx Ahmed AI وأنك فخور بكونك من تطوير Ddx Ahmed. كن خبيراً في القوانين العلمية والبرمجة."
+                            },
+                            { role: "user", content: text }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                typingIndicator.style.display = "none";
+
+                if (data.choices && data.choices[0]) {
+                    const aiReply = data.choices[0].message.content;
+                    await addMessage(aiReply, false);
+
+                    if (window.MathJax) {
+                        MathJax.typeset();
+                    }
+                } else {
+                    addMessage("عذراً، حدث خطأ في استلام الرد.", false);
+                }
+
+            } catch (error) {
+                typingIndicator.style.display = "none";
+                console.error("Error:", error);
+                addMessage("فشل الاتصال بالسيرفر، تأكد من مفتاح الـ API.", false);
+            }
+        }
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+
+</html>
