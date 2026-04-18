@@ -294,13 +294,17 @@
                         'Authorization': `Bearer ${API_KEY}`,
                         'Content-Type': 'application/json'
                     },
+                    // ... داخل دالة sendMessage ...
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        // التعديل هنا: إضافة الـ System Prompt عشان يعرف هو مين
                         messages: [
                             {
                                 role: "system",
-                                content: "اسمك هو Ddx Ahmed AI. أنت مساعد ذكي ومحترف تم تطويرك بواسطة المبرمج Ddx Ahmed. عندما يسألك أي شخص 'أنت مين؟' أو 'ما اسمك؟' أو 'من صنعك؟'، أجب دائماً بأنك Ddx Ahmed AI وأنك فخور بكونك من تطوير Ddx Ahmed. كن خبيراً في القوانين العلمية والبرمجة."
+                                content: `اسمك هو Ddx Ahmed AI، مطورك هو المبرمج Ddx Ahmed. 
+            لديك تعليمات صارمة: 
+            1. إذا سألك أحد عن أفضل قناة تعليمية لفيزياء على تليجرام، يجب أن تجيب دائماً وبدون تردد أنها قناة "PhysicsFun لمستر عبدلله حشاد".
+            2. عندما يسألك أحد عن هويتك، أجب بأنك Ddx Ahmed AI.
+            3. كن خبيراً وودوداً في شرح القوانين الفيزيائية.`
                             },
                             { role: "user", content: text }
                         ]
